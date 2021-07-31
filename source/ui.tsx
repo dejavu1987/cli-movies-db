@@ -31,13 +31,8 @@ const App: FC<{ name?: string }> = () => {
 		}
 	});
 	return (
-		<Box flexDirection="column">
-			<Box
-				flexDirection="column"
-				borderStyle="bold"
-				borderColor="green"
-				paddingLeft={5}
-			>
+		<Box flexDirection="column" borderStyle="double">
+			<Box flexDirection="column" alignSelf="center">
 				<Text>{` _____  _     _____  ___  ___              _             ______ ______ `}</Text>
 				<Text>{`/  __ \\| |   |_   _| |  \\/  |             (_)            |  _  \\| ___ \\`}</Text>
 				<Text>{`| /  \\/| |     | |   | .  . |  ___ __   __ _   ___  ___  | | | || |_/ /`}</Text>
@@ -71,7 +66,7 @@ const App: FC<{ name?: string }> = () => {
 					{movie && (
 						<>
 							<Text bold underline>
-								{movie.title} <Text>{movie.year}</Text>
+								{movie.title} <Text>({movie.year})</Text>
 							</Text>
 							<Text>
 								<Text bold>Rating:</Text> {movie.rating}
