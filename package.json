@@ -3,6 +3,8 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"bin": "dist/cli.js",
+	"author": "Anil Maharjan <anil@anilmaharjan.com.np>",
+	"repository": "https://github.com/dejavu1987/cli-movies-db",
 	"engines": {
 		"node": ">=10"
 	},
