@@ -2,9 +2,11 @@ import React, { FC, useState } from "react";
 import { Box, Text, useApp } from "ink";
 import { movies, Movie } from "./movies";
 import { useInput } from "ink";
+import TextInput from "ink-text-input";
 
 const App: FC<{ name?: string }> = () => {
 	const [movie, setMovie] = useState<Movie>(movies[0] as Movie);
+	const [query, setQuery] = useState<string>("");
 	const { exit } = useApp();
 
 	useInput((input, key) => {
@@ -43,6 +45,12 @@ const App: FC<{ name?: string }> = () => {
 				</Text>
 			</Box>
 			<Box>
+				<Box marginRight={1}>
+					<Text>Enter your query:</Text>
+				</Box>
+				<TextInput value={query} onChange={setQuery} />
+			</Box>
+			<Box>
 				<Box
 					borderStyle="bold"
 					borderColor="green"
@@ -50,11 +58,16 @@ const App: FC<{ name?: string }> = () => {
 					width="30%"
 					flexDirection="column"
 				>
-					{movies.map(({ title, rating, year }) => (
-						<Text key={title} inverse={movie.title === title}>
-							• {title}, <Text color="green">{year}</Text> ({rating})
-						</Text>
-					))}
+					{movies
+						.filter(
+							(movie) =>
+								movie.title.toLowerCase().indexOf(query.toLowerCase()) > -1
+						)
+						.map(({ title, rating, year }) => (
+							<Text key={title} inverse={movie.title === title}>
+								• {title}, <Text color="green">{year}</Text> ({rating})
+							</Text>
+						))}
 				</Box>
 				<Box
 					borderStyle="bold"
