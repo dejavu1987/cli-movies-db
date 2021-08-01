@@ -12,29 +12,33 @@ const App: FC<{ name?: string }> = () => {
 	const [showFilter, setShowFilter] = useState<boolean>(false);
 
 	const handleSelect = (item: { label: string; value: string }) => {
-		setGenre(item.label);
+		setGenre(item.value);
 	};
 
 	const genres = [
 		{
+			label: "All",
+			value: "",
+		},
+		{
 			label: "Crime",
-			value: "crime",
+			value: "Crime",
 		},
 		{
 			label: "Drama",
-			value: "drama",
+			value: "Drama",
 		},
 		{
 			label: "Comedy",
-			value: "comedy",
+			value: "Comedy",
 		},
 		{
 			label: "Thriller",
-			value: "thriller",
+			value: "Thriller",
 		},
 		{
 			label: "Fantasy",
-			value: "fantasy",
+			value: "Fantasy",
 		},
 	];
 
@@ -79,41 +83,46 @@ const App: FC<{ name?: string }> = () => {
 	return (
 		<Box flexDirection="column" borderStyle="double">
 			<Box flexDirection="column" alignSelf="center">
-				<Text>{` _____  _     _____  ___  ___              _             ______ ______ `}</Text>
-				<Text>{`/  __ \\| |   |_   _| |  \\/  |             (_)            |  _  \\| ___ \\`}</Text>
-				<Text>{`| /  \\/| |     | |   | .  . |  ___ __   __ _   ___  ___  | | | || |_/ /`}</Text>
-				<Text>{`| |    | |     | |   | |\\/| | / _ \\\\ \\ / /| | / _ \\/ __| | | | || ___ \\`}</Text>
-				<Text>{`| \\__/\\| |_____| |_  | |  | || (_) |\\ V / | ||  __/\\__ \\ | |/ / | |_/ /`}</Text>
-				<Text>
+				<Text color="red">{` _____  _     _____  ___  ___              _             ______ ______ `}</Text>
+				<Text color="red">{`/  __ \\| |   |_   _| |  \\/  |             (_)            |  _  \\| ___ \\`}</Text>
+				<Text color="red">{`| /  \\/| |     | |   | .  . |  ___ __   __ _   ___  ___  | | | || |_/ /`}</Text>
+				<Text color="red">{`| |    | |     | |   | |\\/| | / _ \\\\ \\ / /| | / _ \\/ __| | | | || ___ \\`}</Text>
+				<Text color="red">{`| \\__/\\| |_____| |_  | |  | || (_) |\\ V / | ||  __/\\__ \\ | |/ / | |_/ /`}</Text>
+				<Text color="red">
 					{` \\____/\\_____/\\___/  \\_|  |_/ \\___/  \\_/  |_| \\___||___/ |___/  \\____/`}
 				</Text>
 			</Box>
-			{showFilter && (
-				<Box borderStyle="bold" borderColor="green" paddingX={1}>
-					<Box
-						borderColor="gray"
-						borderStyle="classic"
-						width="67%"
-						paddingX={1}
-					>
-						<Box marginRight={1}>
-							<Text>Search:</Text>
-						</Box>
+
+			<Box borderStyle="bold" borderColor="green" paddingX={1}>
+				<Box borderColor="gray" borderStyle="classic" width="67%" paddingX={1}>
+					<Box marginRight={1}>
+						<Text>Search:</Text>
+					</Box>
+					{showFilter ? (
 						<TextInput value={query} onChange={setQuery} />
-					</Box>
-					<Box
-						borderColor="gray"
-						borderStyle="double"
-						minWidth="33%"
-						paddingX={1}
-					>
-						<Box marginRight={3}>
-							<Text>Genre</Text>
-						</Box>
-						<SelectInput items={genres} onSelect={handleSelect} />
-					</Box>
+					) : (
+						<>
+							<Text color="green">"{query}"</Text>
+							<Text color="cyan"> Press CTRL+F to update Filters</Text>
+						</>
+					)}
 				</Box>
-			)}
+				<Box
+					borderColor="gray"
+					borderStyle="double"
+					minWidth="33%"
+					paddingX={1}
+				>
+					<Box marginRight={3}>
+						<Text>Genre:</Text>
+					</Box>
+					{showFilter ? (
+						<SelectInput items={genres} onSelect={handleSelect} />
+					) : (
+						<Text color="green">{genre}</Text>
+					)}
+				</Box>
+			</Box>
 			<Box>
 				<Box
 					borderStyle="bold"
@@ -139,6 +148,9 @@ const App: FC<{ name?: string }> = () => {
 						<>
 							<Text bold underline>
 								{movie.title} <Text>({movie.year})</Text>
+							</Text>
+							<Text>
+								<Text bold>Synopsis:</Text> {movie.synopsis}
 							</Text>
 							<Text>
 								<Text bold>Rating:</Text> {movie.rating}
@@ -172,7 +184,8 @@ const App: FC<{ name?: string }> = () => {
 			<Box>
 				<Text>
 					Press <Text color="cyan">UP</Text> or <Text color="cyan">DOWN</Text>{" "}
-					arrow key to select Movie. Press
+					arrow key to select Movie. Press <Text color="cyan">CTRL + F</Text> to
+					show filters.
 				</Text>
 			</Box>
 		</Box>
