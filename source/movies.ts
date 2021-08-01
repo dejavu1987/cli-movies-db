@@ -96,6 +96,15 @@ const movies = [
 			"Aaron Eckhart",
 		],
 	},
+	{
+		title: "Dumb and Dumber",
+		year: 2012,
+		rating: 9.1,
+		director: "John G. Avildsen",
+		duration: 136,
+		genres: ["Comedy", "Drama"],
+		actors: ["Steve Martin", "Al Hames", "Nora Ephron", "John MSI"],
+	},
 ] as Movie[];
 
 export { movies };

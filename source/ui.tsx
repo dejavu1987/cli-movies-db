@@ -3,35 +3,79 @@ import { Box, Text } from "ink";
 import { movies, Movie } from "./movies";
 import { useInput } from "ink";
 import TextInput from "ink-text-input";
+import SelectInput from "ink-select-input";
 
 const App: FC<{ name?: string }> = () => {
 	const [movie, setMovie] = useState<Movie>(movies[0] as Movie);
 	const [query, setQuery] = useState<string>("");
+	const [genre, setGenre] = useState<string>("");
+	const [showFilter, setShowFilter] = useState<boolean>(false);
 
-	useInput((_input, key) => {
+	const handleSelect = (item: { label: string; value: string }) => {
+		setGenre(item.label);
+	};
+
+	const genres = [
+		{
+			label: "Crime",
+			value: "crime",
+		},
+		{
+			label: "Drama",
+			value: "drama",
+		},
+		{
+			label: "Comedy",
+			value: "comedy",
+		},
+		{
+			label: "Thriller",
+			value: "thriller",
+		},
+		{
+			label: "Fantasy",
+			value: "fantasy",
+		},
+	];
+
+	useInput((input, key) => {
+		if (key.ctrl) {
+			if (input === "f") {
+				setShowFilter(true);
+			}
+		}
+		if (key.escape && showFilter) {
+			setShowFilter(false);
+		}
+
 		const movies = getFilteredMovies();
 
-		if (key.upArrow) {
-			let index = movies.indexOf(movie) - 1;
-			if (index < 0) {
-				index = movies.length - 1;
-			}
+		if (!showFilter) {
+			if (key.upArrow) {
+				let index = movies.indexOf(movie) - 1;
+				if (index < 0) {
+					index = movies.length - 1;
+				}
 
-			setMovie(movies[index] as Movie);
-		}
-		if (key.downArrow) {
-			let index = movies.indexOf(movie) + 1;
-
-			if (index > movies.length - 1) {
-				index = 0;
+				setMovie(movies[index] as Movie);
 			}
-			setMovie(movies[index] as Movie);
+			if (key.downArrow) {
+				let index = movies.indexOf(movie) + 1;
+
+				if (index > movies.length - 1) {
+					index = 0;
+				}
+				setMovie(movies[index] as Movie);
+			}
 		}
 	});
 	const getFilteredMovies = () =>
 		movies.filter(
-			(movie) => movie.title.toLowerCase().indexOf(query.toLowerCase()) > -1
+			(movie) =>
+				movie.title.toLowerCase().indexOf(query.toLowerCase()) > -1 &&
+				((genre && movie.genres.indexOf(genre) > -1) || !genre)
 		);
+
 	return (
 		<Box flexDirection="column" borderStyle="double">
 			<Box flexDirection="column" alignSelf="center">
@@ -44,12 +88,32 @@ const App: FC<{ name?: string }> = () => {
 					{` \\____/\\_____/\\___/  \\_|  |_/ \\___/  \\_/  |_| \\___||___/ |___/  \\____/`}
 				</Text>
 			</Box>
-			<Box borderStyle="bold" borderColor="green" paddingX={1}>
-				<Box marginRight={1}>
-					<Text>Enter your query:</Text>
+			{showFilter && (
+				<Box borderStyle="bold" borderColor="green" paddingX={1}>
+					<Box
+						borderColor="gray"
+						borderStyle="classic"
+						width="67%"
+						paddingX={1}
+					>
+						<Box marginRight={1}>
+							<Text>Search:</Text>
+						</Box>
+						<TextInput value={query} onChange={setQuery} />
+					</Box>
+					<Box
+						borderColor="gray"
+						borderStyle="double"
+						minWidth="33%"
+						paddingX={1}
+					>
+						<Box marginRight={3}>
+							<Text>Genre</Text>
+						</Box>
+						<SelectInput items={genres} onSelect={handleSelect} />
+					</Box>
 				</Box>
-				<TextInput value={query} onChange={setQuery} />
-			</Box>
+			)}
 			<Box>
 				<Box
 					borderStyle="bold"
@@ -59,7 +123,7 @@ const App: FC<{ name?: string }> = () => {
 					flexDirection="column"
 				>
 					{getFilteredMovies().map(({ title, rating, year }) => (
-						<Text key={title} inverse={movie.title === title}>
+						<Text key={title} inverse={movie && movie.title === title}>
 							• {title}, <Text color="green">{year}</Text> ({rating})
 						</Text>
 					))}
