@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Box, Text, useApp } from "ink";
+import { Box, Text } from "ink";
 import { movies, Movie } from "./movies";
 import { useInput } from "ink";
 import TextInput from "ink-text-input";
@@ -7,13 +7,9 @@ import TextInput from "ink-text-input";
 const App: FC<{ name?: string }> = () => {
 	const [movie, setMovie] = useState<Movie>(movies[0] as Movie);
 	const [query, setQuery] = useState<string>("");
-	const { exit } = useApp();
 
-	useInput((input, key) => {
-		if (input === "q") {
-			// Exit program
-			exit();
-		}
+	useInput((_input, key) => {
+		const movies = getFilteredMovies();
 
 		if (key.upArrow) {
 			let index = movies.indexOf(movie) - 1;
@@ -32,6 +28,10 @@ const App: FC<{ name?: string }> = () => {
 			setMovie(movies[index] as Movie);
 		}
 	});
+	const getFilteredMovies = () =>
+		movies.filter(
+			(movie) => movie.title.toLowerCase().indexOf(query.toLowerCase()) > -1
+		);
 	return (
 		<Box flexDirection="column" borderStyle="double">
 			<Box flexDirection="column" alignSelf="center">
@@ -44,7 +44,7 @@ const App: FC<{ name?: string }> = () => {
 					{` \\____/\\_____/\\___/  \\_|  |_/ \\___/  \\_/  |_| \\___||___/ |___/  \\____/`}
 				</Text>
 			</Box>
-			<Box>
+			<Box borderStyle="bold" borderColor="green" paddingX={1}>
 				<Box marginRight={1}>
 					<Text>Enter your query:</Text>
 				</Box>
@@ -58,16 +58,11 @@ const App: FC<{ name?: string }> = () => {
 					width="30%"
 					flexDirection="column"
 				>
-					{movies
-						.filter(
-							(movie) =>
-								movie.title.toLowerCase().indexOf(query.toLowerCase()) > -1
-						)
-						.map(({ title, rating, year }) => (
-							<Text key={title} inverse={movie.title === title}>
-								• {title}, <Text color="green">{year}</Text> ({rating})
-							</Text>
-						))}
+					{getFilteredMovies().map(({ title, rating, year }) => (
+						<Text key={title} inverse={movie.title === title}>
+							• {title}, <Text color="green">{year}</Text> ({rating})
+						</Text>
+					))}
 				</Box>
 				<Box
 					borderStyle="bold"
@@ -113,7 +108,7 @@ const App: FC<{ name?: string }> = () => {
 			<Box>
 				<Text>
 					Press <Text color="cyan">UP</Text> or <Text color="cyan">DOWN</Text>{" "}
-					arrow key to select Movie. Press <Text color="cyan">Q</Text> to Quit.
+					arrow key to select Movie. Press
 				</Text>
 			</Box>
 		</Box>
